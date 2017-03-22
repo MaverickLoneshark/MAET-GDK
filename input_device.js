@@ -6,13 +6,13 @@
 	MAET, 2013 - 2017
 */
 
-(function(MAETLibrary)
+(function(MAETGDK)
 {
 	/**
 	Object that tracks received input; it is up to individual games to handle tracked input
 	**/
 	//function InputDevice()
-	MAETLibrary.prototype.InputDevice = function()
+	MAETGDK.prototype.InputDevice = function()
 	{
 		var thisInputDevice = this;
 		
@@ -156,4 +156,4 @@
 		
 		return;
 	}
-})(MAETLibrary);
+})(MAETGDK);

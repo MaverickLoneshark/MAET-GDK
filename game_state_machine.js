@@ -6,8 +6,8 @@
 	MAET, 2013 - 2017
 */
 
-//TODO: Move all definitions into following block and invoke from MAET_LIBRARY global
-(function(MAETLibrary)
+//TODO: Move all definitions into following block and invoke from MAET_GDK global
+(function(MAETGDK)
 {
 	function GameStateMachine(game)
 	{
@@ -88,7 +88,7 @@
 		return;
 	}
 	
-	MAETLibrary.prototype.GameStateMachine = GameStateMachine;
+	MAETGDK.prototype.GameStateMachine = GameStateMachine;
 	
 	return;
-})(MAETLibrary);
+})(MAETGDK);

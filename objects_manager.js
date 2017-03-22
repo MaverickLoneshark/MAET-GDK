@@ -6,7 +6,7 @@
 	MAET, 2013 - 2017
 */
 
-(function(MAETLibrary)
+(function(MAETGDK)
 {
 	function ObjectsManager()
 	{
@@ -291,7 +291,7 @@
 		return;
 	}
 	
-	MAETLibrary.prototype.ObjectsManager = ObjectsManager;
+	MAETGDK.prototype.ObjectsManager = ObjectsManager;
 	
 	return;
-})(MAETLibrary);
+})(MAETGDK);
