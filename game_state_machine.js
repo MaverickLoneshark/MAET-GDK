@@ -68,6 +68,7 @@
 		//The main loop for the Game; calls a different function depending on current state
 		function gameLoop()
 		{
+			MAET_GDK.pollGamePad();
 			thisGSM.runGameState();
 			
 			return;
@@ -80,9 +81,11 @@
 			thisGSM.FPS = frames_per_second;
 			thisGSM.frame_duration = 1000 / thisGSM.FPS;
 			
-			machine = thisGSM; //'this' makes all of the difference...
-			
-			return setInterval(function(){machine.gameLoop();}, thisGSM.frame_duration);
+			return setInterval(function() {
+					thisGSM.gameLoop();
+				},
+				thisGSM.frame_duration
+			);
 		}
 		
 		return;
