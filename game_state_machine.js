@@ -68,7 +68,7 @@
 		//The main loop for the Game; calls a different function depending on current state
 		function gameLoop()
 		{
-			MAET_GDK.pollGamePad();
+			MAET_GDK.processInputs();
 			thisGSM.runGameState();
 			
 			return;
