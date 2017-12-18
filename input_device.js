@@ -6,14 +6,14 @@
 	MAET, 2013 - 2017
 */
 
-(function(MAETGDK)
-{
+"use strict";
+
+(function(MAETGDK) {
 	/**
 	Object that tracks received input; it is up to individual games to handle tracked input
 	**/
 	//function InputDevice()
-	MAETGDK.prototype.InputDevice = function()
-	{
+	MAETGDK.prototype.InputDevice = function() {
 		var thisInputDevice = this;
 		
 		/* members */
@@ -25,63 +25,68 @@
 		this.select_button = false;
 		this.jump_button = false;
 		this.special_button = false;
-		
 		this.gamepad;
+		this.keyboard = {
+			left: false,
+			up: false,
+			right: false,
+			down: false,
+			start: false,
+			select: false,
+			jump: false,
+			special: false
+		};
 		
 		/* methods */
-		this.handlePressedInput = function(ev)
-		{
+		this.handlePressedInput = function(ev) {
 			var keycode,
 				keychar;
 			
-			if(window.ev)
-			{
+			if(window.ev) {
 				keycode = ev.keyCode;
 			}
-			else if(ev.which)
-			{
+			else if(ev.which) {
 				keycode = ev.which;
 			}
 			
-			switch(keycode)
-			{
+			switch(keycode) {
 				case 37: //left
 				case 65: //a
-					this.left_button = true;
+					this.keyboard.left = true;
 				break;
 				
 				case 38: //up
 				case 87: //w
-					this.up_button = true;
+					this.keyboard.up = true;
 				break;
 				
 				case 39: //right
 				case 68: //d
-					this.right_button = true;
+					this.keyboard.right = true;
 				break;
 				
 				case 40: //down
 				case 83: //s
-					this.down_button = true;
+					this.keyboard.down = true;
 				break;
 				
 				case 90: //z
 				case 74: //j
-					this.special_button = true;
+					this.keyboard.special = true;
 				break;
 				
 				case 88: //x
 				case 75: //k
 				case 32: //[space]
-					this.jump_button = true;
+					this.keyboard.jump = true;
 				break;
 				
-				case 220: //\
-					this.select_button = true;
+				case 220: //'\'
+					this.keyboard.select = true;
 				break;
 				
 				case 13: //enter
-					this.start_button = true;
+					this.keyboard.start = true;
 				break;
 				
 				default: //other
@@ -91,59 +96,55 @@
 			return;
 		}
 
-		this.handleReleasedInput = function(ev)
-		{
+		this.handleReleasedInput = function(ev) {
 			var keycode,
 				keychar;
 			
-			if(window.ev)
-			{
+			if(window.ev) {
 				keycode = ev.keyCode;
 			}
-			else if(ev.which)
-			{
+			else if(ev.which) {
 				keycode = ev.which;
 			}
 			
-			switch(keycode)
-			{
+			switch(keycode) {
 				case 37: //left
 				case 65: //a
-					this.left_button = false;
+					this.keyboard.left = false;
 				break;
 				
 				case 38: //up
 				case 87: //w
-					this.up_button = false;
+					this.keyboard.up = false;
 				break;
 				
 				case 39: //right
 				case 68: //d
-					this.right_button = false;
+					this.keyboard.right = false;
 				break;
 				
 				case 40: //down
 				case 83: //s
-					this.down_button = false;
+					this.keyboard.down = false;
 				break;
 				
 				case 90: //z
 				case 74: //j
-					this.special_button = false;
+					this.keyboard.special = false;
 				break;
 				
 				case 88: //x
 				case 75: //k
 				case 32: //[space]
-					this.jump_button = false;
+					this.keyboard.jump = false;
 				break;
 				
-				case 220: //\
-					this.select_button = false;
+				case 220: //'\'
+					this.keyboard.select = false;
 				break;
 				
 				case 13: //enter
-					this.start_button = false;
+					this.keyboard.start = false;
 				break;
 				
 				default: //other
@@ -153,10 +154,26 @@
 			return;
 		}
 		
+		this.fetchConnectedGamepad = function() {
+			var gamepads = navigator.getGamepads(),
+				i;
+			
+			for(i = 0; i < gamepads.length; i++) {
+				if(gamepads[i]) {
+					this.gamepad = gamepads[i];
+					break;
+				}
+			}
+			
+			return;
+		}
 		
-		MAETGDK.prototype.pollGamePad = function() {
+		MAETGDK.prototype.processInputs = function() {
+			thisInputDevice.fetchConnectedGamepad();
+			
 			if(thisInputDevice.gamepad) {
 				switch(thisInputDevice.gamepad.id) {
+					case 'Xbox 360 Controller (XInput STANDARD GAMEPAD)':
 					case 'xinput':
 						processXInput(thisInputDevice.gamepad);
 					break;
@@ -171,6 +188,7 @@
 		}
 		
 		function processXInput(gamepad) {
+			var keyboard = thisInputDevice.keyboard;
 			const A_BUTTON = 0,
 				B_BUTTON = 1,
 				X_BUTTON = 2,
@@ -188,14 +206,14 @@
 				LEFT_BUTTON = 14,
 				RIGHT_BUTTON = 15;
 			
-			thisInputDevice.left_button = gamepad.buttons[LEFT_BUTTON].pressed;
-			thisInputDevice.up_button = gamepad.buttons[UP_BUTTON].pressed;
-			thisInputDevice.right_button = gamepad.buttons[RIGHT_BUTTON].pressed;
-			thisInputDevice.down_button = gamepad.buttons[DOWN_BUTTON].pressed;
-			thisInputDevice.special_button = gamepad.buttons[X_BUTTON].pressed;
-			thisInputDevice.jump_button = gamepad.buttons[A_BUTTON].pressed;
-			thisInputDevice.start_button = gamepad.buttons[START_BUTTON].pressed;
-			thisInputDevice.select_button = gamepad.buttons[BACK_BUTTON].pressed;
+			thisInputDevice.left_button = gamepad.buttons[LEFT_BUTTON].pressed || keyboard.left;
+			thisInputDevice.up_button = gamepad.buttons[UP_BUTTON].pressed || keyboard.up;
+			thisInputDevice.right_button = gamepad.buttons[RIGHT_BUTTON].pressed || keyboard.right;
+			thisInputDevice.down_button = gamepad.buttons[DOWN_BUTTON].pressed || keyboard.down;
+			thisInputDevice.special_button = gamepad.buttons[X_BUTTON].pressed || keyboard.special;
+			thisInputDevice.jump_button = gamepad.buttons[A_BUTTON].pressed || keyboard.jump;
+			thisInputDevice.start_button = gamepad.buttons[START_BUTTON].pressed || keyboard.start;
+			thisInputDevice.select_button = gamepad.buttons[BACK_BUTTON].pressed || keyboard.select;
 			
 			return;
 		}
@@ -214,9 +232,11 @@
 		
 		document.body.onkeydown = function(event) { thisInputDevice.handlePressedInput(event); };
 		document.body.onkeyup = function(event) { thisInputDevice.handleReleasedInput(event); };
+		/*
 		window.addEventListener("gamepadconnected", function(event) {
 			thisInputDevice.gamepad = navigator.getGamepads()[event.gamepad.index];
 		});
+		*/
 		
 		return;
 	}
