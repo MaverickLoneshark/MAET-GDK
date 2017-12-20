@@ -36,6 +36,16 @@
 			jump: false,
 			special: false
 		};
+		this.controller = {
+			left: false,
+			up: false,
+			right: false,
+			down: false,
+			start: false,
+			select: false,
+			jump: false,
+			special: false
+		};
 		
 		/* methods */
 		this.handlePressedInput = function(ev) {
@@ -168,7 +178,7 @@
 			return;
 		}
 		
-		MAETGDK.prototype.processInputs = function() {
+		MAETGDK.prototype.getInputs = function() {
 			thisInputDevice.fetchConnectedGamepad();
 			
 			if(thisInputDevice.gamepad) {
@@ -184,11 +194,13 @@
 				}
 			}
 			
+			processInputs();
+			
 			return;
 		}
 		
 		function processXInput(gamepad) {
-			var keyboard = thisInputDevice.keyboard;
+			var controller = thisInputDevice.controller;
 			const A_BUTTON = 0,
 				B_BUTTON = 1,
 				X_BUTTON = 2,
@@ -206,14 +218,14 @@
 				LEFT_BUTTON = 14,
 				RIGHT_BUTTON = 15;
 			
-			thisInputDevice.left_button = gamepad.buttons[LEFT_BUTTON].pressed || keyboard.left;
-			thisInputDevice.up_button = gamepad.buttons[UP_BUTTON].pressed || keyboard.up;
-			thisInputDevice.right_button = gamepad.buttons[RIGHT_BUTTON].pressed || keyboard.right;
-			thisInputDevice.down_button = gamepad.buttons[DOWN_BUTTON].pressed || keyboard.down;
-			thisInputDevice.special_button = gamepad.buttons[X_BUTTON].pressed || keyboard.special;
-			thisInputDevice.jump_button = gamepad.buttons[A_BUTTON].pressed || keyboard.jump;
-			thisInputDevice.start_button = gamepad.buttons[START_BUTTON].pressed || keyboard.start;
-			thisInputDevice.select_button = gamepad.buttons[BACK_BUTTON].pressed || keyboard.select;
+			controller.left = gamepad.buttons[LEFT_BUTTON].pressed;
+			controller.up = gamepad.buttons[UP_BUTTON].pressed;
+			controller.right = gamepad.buttons[RIGHT_BUTTON].pressed;
+			controller.down = gamepad.buttons[DOWN_BUTTON].pressed;
+			controller.special = gamepad.buttons[X_BUTTON].pressed;
+			controller.jump = gamepad.buttons[A_BUTTON].pressed;
+			controller.start = gamepad.buttons[START_BUTTON].pressed;
+			controller.select = gamepad.buttons[BACK_BUTTON].pressed;
 			
 			return;
 		}
@@ -226,6 +238,22 @@
 					console.debug("Button " + i + " was pressed! Woo-hoo!");
 				}
 			}
+			
+			return;
+		}
+		
+		function processInputs() {
+			var keyboard = thisInputDevice.keyboard,
+				controller = thisInputDevice.controller;
+			
+			thisInputDevice.left_button = controller.left || keyboard.left;
+			thisInputDevice.up_button = controller.up || keyboard.up;
+			thisInputDevice.right_button = controller.right || keyboard.right;
+			thisInputDevice.down_button = controller.down || keyboard.down;
+			thisInputDevice.special_button = controller.special || keyboard.special;
+			thisInputDevice.jump_button = controller.jump || keyboard.jump;
+			thisInputDevice.start_button = controller.start || keyboard.start;
+			thisInputDevice.select_button = controller.select || keyboard.select;
 			
 			return;
 		}
