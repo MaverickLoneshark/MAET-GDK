@@ -8,9 +8,7 @@
 
 //TODO: Move all definitions into following block and invoke from MAET_GDK global
 (function(MAETGDK) {
-	/**
-	Object that tracks sprite animation frame data
-	**/
+	//Object that tracks sprite animation frame data
 	function Frame() {
 		this.x = 0;
 		this.y = 0;
@@ -21,10 +19,8 @@
 		return;
 	}
 
-	/**
-	Object that marks collision detection boundaries
-	NOTE: this was made with tiles in mind, but maybe pixel collision detection would make this obsolete
-	**/
+	//Object that marks collision detection boundaries
+	//NOTE: this was made with tiles in mind, but maybe pixel collision detection would make this obsolete
 	function HitBox() {
 		//0 = no collision, 1 = collision
 		this.grid = new Array();
@@ -68,9 +64,7 @@
 		return;
 	}
 
-	/**
-	Object that contains information for animated 2D game objects
-	**/
+	//Object that contains information for animated 2D game objects
 	function Sprite() {
 		this.x = 0;
 		this.y = 0;
@@ -123,10 +117,7 @@
 	}
 
 	/* functions */
-
-	/**
-	Draws a sprite
-	**/
+	//Draws a sprite
 	Sprite.prototype.draw = function(context) {
 		var tempx = this.x,
 			tempy = this.y;
@@ -156,9 +147,7 @@
 		return;
 	}
 
-	/**
-	Returns true if a collision is detected with another object
-	**/
+	//Returns true if a collision is detected with another object
 	Sprite.prototype.isColliding = function(other_object) {
 		if(this.boxCollides(other_object)) {
 			//if(pixelTest) {

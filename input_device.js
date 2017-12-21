@@ -12,9 +12,28 @@
 	/**
 	Object that tracks received input; it is up to individual games to handle tracked input
 	**/
-	//function InputDevice()
-	MAETGDK.prototype.InputDevice = function() {
-		var thisInputDevice = this;
+	function InputDevice() {
+		var thisInputDevice = this,
+			keyboard = {
+				left: false,
+				up: false,
+				right: false,
+				down: false,
+				start: false,
+				select: false,
+				jump: false,
+				special: false
+			},
+			controller = {
+				left: false,
+				up: false,
+				right: false,
+				down: false,
+				start: false,
+				select: false,
+				jump: false,
+				special: false
+			};
 		
 		/* members */
 		this.left_button = false;
@@ -26,77 +45,57 @@
 		this.jump_button = false;
 		this.special_button = false;
 		this.gamepad;
-		this.keyboard = {
-			left: false,
-			up: false,
-			right: false,
-			down: false,
-			start: false,
-			select: false,
-			jump: false,
-			special: false
-		};
-		this.controller = {
-			left: false,
-			up: false,
-			right: false,
-			down: false,
-			start: false,
-			select: false,
-			jump: false,
-			special: false
-		};
 		
 		/* methods */
-		this.handlePressedInput = function(ev) {
+		function handlePressedInput(event) {
 			var keycode,
 				keychar;
 			
-			if(window.ev) {
-				keycode = ev.keyCode;
+			if(window.event) {
+				keycode = event.keyCode;
 			}
-			else if(ev.which) {
-				keycode = ev.which;
+			else if(event.which) {
+				keycode = event.which;
 			}
 			
 			switch(keycode) {
 				case 37: //left
 				case 65: //a
-					this.keyboard.left = true;
+					keyboard.left = true;
 				break;
 				
 				case 38: //up
 				case 87: //w
-					this.keyboard.up = true;
+					keyboard.up = true;
 				break;
 				
 				case 39: //right
 				case 68: //d
-					this.keyboard.right = true;
+					keyboard.right = true;
 				break;
 				
 				case 40: //down
 				case 83: //s
-					this.keyboard.down = true;
+					keyboard.down = true;
 				break;
 				
 				case 90: //z
 				case 74: //j
-					this.keyboard.special = true;
+					keyboard.special = true;
 				break;
 				
 				case 88: //x
 				case 75: //k
 				case 32: //[space]
-					this.keyboard.jump = true;
+					keyboard.jump = true;
 				break;
 				
 				case 220: //'\'
-					this.keyboard.select = true;
+					keyboard.select = true;
 				break;
 				
 				case 13: //enter
-					this.keyboard.start = true;
+					keyboard.start = true;
 				break;
 				
 				default: //other
@@ -105,56 +104,56 @@
 			
 			return;
 		}
-
-		this.handleReleasedInput = function(ev) {
+		
+		function handleReleasedInput(event) {
 			var keycode,
 				keychar;
 			
-			if(window.ev) {
-				keycode = ev.keyCode;
+			if(window.event) {
+				keycode = event.keyCode;
 			}
-			else if(ev.which) {
-				keycode = ev.which;
+			else if(event.which) {
+				keycode = event.which;
 			}
 			
 			switch(keycode) {
 				case 37: //left
 				case 65: //a
-					this.keyboard.left = false;
+					keyboard.left = false;
 				break;
 				
 				case 38: //up
 				case 87: //w
-					this.keyboard.up = false;
+					keyboard.up = false;
 				break;
 				
 				case 39: //right
 				case 68: //d
-					this.keyboard.right = false;
+					keyboard.right = false;
 				break;
 				
 				case 40: //down
 				case 83: //s
-					this.keyboard.down = false;
+					keyboard.down = false;
 				break;
 				
 				case 90: //z
 				case 74: //j
-					this.keyboard.special = false;
+					keyboard.special = false;
 				break;
 				
 				case 88: //x
 				case 75: //k
 				case 32: //[space]
-					this.keyboard.jump = false;
+					keyboard.jump = false;
 				break;
 				
 				case 220: //'\'
-					this.keyboard.select = false;
+					keyboard.select = false;
 				break;
 				
 				case 13: //enter
-					this.keyboard.start = false;
+					keyboard.start = false;
 				break;
 				
 				default: //other
@@ -179,17 +178,17 @@
 		}
 		
 		MAETGDK.prototype.getInputs = function() {
-			thisInputDevice.fetchConnectedGamepad();
+			this.input_device.fetchConnectedGamepad();
 			
-			if(thisInputDevice.gamepad) {
-				switch(thisInputDevice.gamepad.id) {
+			if(this.input_device.gamepad) {
+				switch(this.input_device.gamepad.id) {
 					case 'Xbox 360 Controller (XInput STANDARD GAMEPAD)':
 					case 'xinput':
-						processXInput(thisInputDevice.gamepad);
+						processXInput(this.input_device.gamepad);
 					break;
 					
 					default:
-						processGeneric(thisInputDevice.gamepad);
+						processGeneric(this.input_device.gamepad);
 					break;
 				}
 			}
@@ -200,7 +199,6 @@
 		}
 		
 		function processXInput(gamepad) {
-			var controller = thisInputDevice.controller;
 			const A_BUTTON = 0,
 				B_BUTTON = 1,
 				X_BUTTON = 2,
@@ -243,9 +241,6 @@
 		}
 		
 		function processInputs() {
-			var keyboard = thisInputDevice.keyboard,
-				controller = thisInputDevice.controller;
-			
 			thisInputDevice.left_button = controller.left || keyboard.left;
 			thisInputDevice.up_button = controller.up || keyboard.up;
 			thisInputDevice.right_button = controller.right || keyboard.right;
@@ -258,8 +253,9 @@
 			return;
 		}
 		
-		document.body.onkeydown = function(event) { thisInputDevice.handlePressedInput(event); };
-		document.body.onkeyup = function(event) { thisInputDevice.handleReleasedInput(event); };
+		document.body.onkeydown = handlePressedInput;
+		document.body.onkeyup = handleReleasedInput;
+		
 		/*
 		window.addEventListener("gamepadconnected", function(event) {
 			thisInputDevice.gamepad = navigator.getGamepads()[event.gamepad.index];
@@ -269,6 +265,7 @@
 		return;
 	}
 	
+	MAETGDK.prototype.InputDevice = InputDevice;
 	MAET_GDK.input_device = new MAET_GDK.InputDevice();
 	
 	return;
