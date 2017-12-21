@@ -9,9 +9,7 @@
 "use strict";
 
 (function(MAETGDK) {
-	/**
-	Object that tracks received input; it is up to individual games to handle tracked input
-	**/
+	//Object that tracks received input; it is up to individual games to handle tracked input
 	function InputDevice() {
 		var thisInputDevice = this,
 			keyboard = {
@@ -163,13 +161,13 @@
 			return;
 		}
 		
-		this.fetchConnectedGamepad = function() {
+		function fetchConnectedGamepad() {
 			var gamepads = navigator.getGamepads(),
 				i;
 			
 			for(i = 0; i < gamepads.length; i++) {
 				if(gamepads[i]) {
-					this.gamepad = gamepads[i];
+					thisInputDevice.gamepad = gamepads[i];
 					break;
 				}
 			}
@@ -178,17 +176,17 @@
 		}
 		
 		MAETGDK.prototype.getInputs = function() {
-			this.input_device.fetchConnectedGamepad();
+			fetchConnectedGamepad();
 			
-			if(this.input_device.gamepad) {
-				switch(this.input_device.gamepad.id) {
+			if(thisInputDevice.gamepad) {
+				switch(thisInputDevice.gamepad.id) {
 					case 'Xbox 360 Controller (XInput STANDARD GAMEPAD)':
 					case 'xinput':
-						processXInput(this.input_device.gamepad);
+						processXInput(thisInputDevice.gamepad);
 					break;
 					
 					default:
-						processGeneric(this.input_device.gamepad);
+						processGeneric(thisInputDevice.gamepad);
 					break;
 				}
 			}
