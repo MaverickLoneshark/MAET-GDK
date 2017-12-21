@@ -7,13 +7,11 @@
 */
 
 //TODO: Move all definitions into following block and invoke from MAET_GDK global
-(function(MAETGDK)
-{
+(function(MAETGDK) {
 	/**
 	Object that tracks sprite animation frame data
 	**/
-	function Frame()
-	{
+	function Frame() {
 		this.x = 0;
 		this.y = 0;
 		this.width = 48;
@@ -27,8 +25,7 @@
 	Object that marks collision detection boundaries
 	NOTE: this was made with tiles in mind, but maybe pixel collision detection would make this obsolete
 	**/
-	function HitBox()
-	{
+	function HitBox() {
 		//0 = no collision, 1 = collision
 		this.grid = new Array();
 		this.grid[0] = 0;
@@ -74,8 +71,7 @@
 	/**
 	Object that contains information for animated 2D game objects
 	**/
-	function Sprite()
-	{
+	function Sprite() {
 		this.x = 0;
 		this.y = 0;
 		this.xscale = 1.0;
@@ -131,18 +127,15 @@
 	/**
 	Draws a sprite
 	**/
-	Sprite.prototype.draw = function(context)
-	{
+	Sprite.prototype.draw = function(context) {
 		var tempx = this.x,
 			tempy = this.y;
 		
-		if(this.xscale < 1)
-		{
+		if(this.xscale < 1) {
 			tempx += this.frame[this.f_num].width;
 		}
 		
-		if(this.yscale < 1)
-		{
+		if(this.yscale < 1) {
 			tempy += this.frame[this.f_num].height;
 		}
 		
@@ -166,12 +159,9 @@
 	/**
 	Returns true if a collision is detected with another object
 	**/
-	Sprite.prototype.isColliding = function(other_object)
-	{
-		if(this.boxCollides(other_object))
-		{
-			//if(pixelTest)
-			//{
+	Sprite.prototype.isColliding = function(other_object) {
+		if(this.boxCollides(other_object)) {
+			//if(pixelTest) {
 				return true;
 			//}
 		}
@@ -180,8 +170,7 @@
 	}
 
 	/* Helper functions */
-	Sprite.prototype.boxCollides = function(other_object)
-	{
+	Sprite.prototype.boxCollides = function(other_object) {
 		var my_left = this.x,
 			my_right = this.x + this.frame[this.f_num].width,
 			my_top = this.y,
@@ -192,31 +181,26 @@
 			other_top = other_object.y,
 			other_bottom = other_object.y + other_object.frame[other_object.f_num].height;
 		
-		if(my_bottom < other_top)
-		{
+		if(my_bottom < other_top) {
 			return false;
 		}
 		
-		if(my_top > other_bottom)
-		{
+		if(my_top > other_bottom) {
 			return false;
 		}
 		
-		if(my_left > other_right)
-		{
+		if(my_left > other_right) {
 			return false;
 		}
 		
-		if(my_right < other_left)
-		{
+		if(my_right < other_left) {
 			return false;
 		}
 		
 		return true;
 	}
 
-	Sprite.prototype.drawBoundingBox = function(context)
-	{
+	Sprite.prototype.drawBoundingBox = function(context) {
 		context.save();
 		context.translate(this.x, this.y);
 		context.strokeStyle="#FF0000";

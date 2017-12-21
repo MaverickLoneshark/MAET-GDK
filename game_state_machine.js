@@ -7,10 +7,8 @@
 */
 
 //TODO: Move all definitions into following block and invoke from MAET_GDK global
-(function(MAETGDK)
-{
-	function GameStateMachine(game)
-	{
+(function(MAETGDK) {
+	function GameStateMachine(game) {
 		//Enumerations for Game States
 		this.GS_TITLE = 0;
 		this.GS_NEW_GAME = 1;
@@ -36,13 +34,11 @@
 		
 		/* methods */
 		//Changes the game's current state; sets the function to run in gameLoop
-		function setGameState(new_state)
-		{
+		function setGameState(new_state) {
 			thisGSM.last_state = thisGSM.game_state;
 			thisGSM.game_state = new_state;
 			
-			switch(thisGSM.game_state)
-			{
+			switch(thisGSM.game_state) {
 				case thisGSM.GS_TITLE:
 					thisGSM.runGameState = thisGSM.game.title;
 				break;
@@ -66,8 +62,7 @@
 		
 		
 		//The main loop for the Game; calls a different function depending on current state
-		function gameLoop()
-		{
+		function gameLoop() {
 			MAET_GDK.getInputs();
 			thisGSM.runGameState();
 			
@@ -75,8 +70,7 @@
 		}
 		
 		//Initializes game state and starts the game loop
-		function startGame(frames_per_second)
-		{
+		function startGame(frames_per_second) {
 			thisGSM.setGameState(thisGSM.GS_TITLE);
 			thisGSM.FPS = frames_per_second;
 			thisGSM.frame_duration = 1000 / thisGSM.FPS;
