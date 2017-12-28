@@ -185,8 +185,10 @@
 						processXInput(thisInputDevice.gamepad);
 					break;
 					
+					case '2In1 USB Joystick (Vendor: 0e8f Product: 0003)':
 					default:
-						processGeneric(thisInputDevice.gamepad);
+						processGenericGamepad(thisInputDevice.gamepad);
+						//debugGamepad(thisInputDevice.gamepad);
 					break;
 				}
 			}
@@ -226,12 +228,53 @@
 			return;
 		}
 		
-		function processGeneric(gamepad) {
-			var i;
+		function processGenericGamepad(gamepad) {
+			const A_BUTTON = 0,
+				B_BUTTON = 1,
+				JUMP_BUTTON = 2,
+				SPECIAL_BUTTON = 3,
+				LB_BUTTON = 4,
+				RB_BUTTON = 5,
+				LT_BUTTON = 6,
+				RT_BUTTON = 7,
+				SELECT_BUTTON =8,
+				START_BUTTON = 9,
+				LEFT_STICK_IN = 10,
+				RIGHT_STICK_IN = 11,
+				DPAD_AXIS = 9;
+			
+			if(gamepad.axes[DPAD_AXIS] < 3) {
+				controller.left = (gamepad.axes[DPAD_AXIS] > 0.15);
+				controller.right = ((gamepad.axes[DPAD_AXIS] < 0) && (gamepad.axes[DPAD_AXIS] > -1));
+				controller.up = ((gamepad.axes[DPAD_AXIS] === 1) || (gamepad.axes[DPAD_AXIS] < -0.5));
+				controller.down = ((gamepad.axes[DPAD_AXIS] < 0.5) && (gamepad.axes[DPAD_AXIS] > -0.15));
+			}
+			else {
+				controller.left = false;
+				controller.right = false;
+				controller.up = false;
+				controller.down = false;
+			}
+			
+			controller.special = gamepad.buttons[SPECIAL_BUTTON].pressed;
+			controller.jump = gamepad.buttons[JUMP_BUTTON].pressed;
+			controller.start = gamepad.buttons[START_BUTTON].pressed;
+			controller.select = gamepad.buttons[SELECT_BUTTON].pressed;
+			
+			return;
+		}
+		
+		function debugGamepad(gamepad) {
+			var i,
+				j;
 			
 			for(i = 0; i < gamepad.buttons.length; i++) {
 				if(gamepad.buttons[i].pressed) {
 					console.debug("Button " + i + " was pressed! Woo-hoo!");
+					
+					for(j = 0; j < gamepad.axes.length; j++) {
+						console.debug("Axes[" + j + "]: " + gamepad.axes[j]);
+					}
 				}
 			}
 			
